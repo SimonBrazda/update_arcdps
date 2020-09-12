@@ -1,7 +1,12 @@
 #! python3
 
-import os, sys, requests, psutil, logging, time, os.path
-import hashlib, subprocess
+from distutils.spawn import find_executable
+import os
+import sys, logging, time, os.path
+import hashlib
+import subprocess
+
+import requests, psutil
 
 arc = 'https://www.deltaconnected.com/arcdps/x64/d3d9.dll'
 arc_MD5 = 'https://www.deltaconnected.com/arcdps/x64/d3d9.dll.md5sum'
@@ -10,13 +15,21 @@ arc_file = "d3d9.dll"
 gw2_directory = os.path.join("F:/", "Program Files", "Guild Wars 2")
 arc_directory = os.path.join(gw2_directory, "bin64")
 
-def find_procs_by_name(name):
-    "Return a list of processes matching 'name'."
-    ls = []
+def is_proc_running(name):
+    """Return a list of processes matching 'name'.
+    
+        Parameters:
+            name (str): A name of process
+
+        Returns:
+            bool: True if process is running else False"""
+
     for p in psutil.process_iter(['name']):
         if p.info['name'] == name:
-            ls.append(p)
-    return ls
+            return True
+
+    return False
+
 
 def hashfile(file):
     BUF_SIZE = 65536 
@@ -88,7 +101,7 @@ def launch_gw2():
     sys.exit()
    
 try:
-    if find_procs_by_name(gw2_file) != []:
+    if is_proc_running(gw2_file) == True:
         print("Guild Wars 2 is already running, please close it!")
         time.sleep(5)
         sys.exit()
