@@ -6,8 +6,6 @@ if ($status -like '*unauthenticated*') {
 Write-Output "bw get password `"Guild Wars 2`" | clip"
 bw get password "Guild Wars 2" | clip
 Write-Output "Password copied to clipboard"
-# bw logout
-# Write-Output "User logedout"
 Write-Output "Erasing cliboard in 15 seconds..."
 Start-Sleep -s 15
 if(Write-Output $null | clip) {
