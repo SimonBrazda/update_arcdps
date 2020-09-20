@@ -7,6 +7,7 @@ import subprocess
 
 import requests, psutil
 from requests.models import HTTPError
+import pyperclip
 
 arc = 'https://www.deltaconnected.com/arcdps/x64/d3d9.dll'
 arc_MD5 = 'https://www.deltaconnected.com/arcdps/x64/d3d9.dll.md5sum'
@@ -18,13 +19,14 @@ arc_directory = os.path.join(gw2_directory, "bin64")
 filepath_to_check = os.path.join(arc_directory, arc_file)
 
 class ArcUpdateError(Exception):
-    pass
-
-class NoFileToUpdateError(Exception):
-    pass
+    def __init__(self, message="Failed to update ArcDps"):
+        self.message = message
+        super().__init__(self.message)
 
 class HashesDoNotMatchError(Exception):
-    pass
+    def __init__(self, message="Downloaded file's hash does not match with the referenced hash"):
+        self.message = message
+        super().__init__(self.message)
 
 def is_proc_running(name):
     """Return a list of processes matching 'name'.
@@ -146,4 +148,5 @@ try:
     check_for_update()
 except ArcUpdateError as err:
     print(err)
+    os.remove(os.path.join(arc_directory, "d3d9.dll.temp.md5sum"))
     launch_gw2()
